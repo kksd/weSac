@@ -14,4 +14,10 @@ class Asteroid(db.Model):
     center_geoetic = db.StringProperty(required=True)
     center_radii = db.StringProperty(required=True)
     target_primary = db.StringProperty(required=True)
-    
+
+class AsteroidLocation(db.Model):
+    asteroid = db.ReferenceProperty(Asteroid, required=True)
+    timestamp = db.DateTimeProperty(required=True)
+    ra = db.FloatProperty(required=True)
+    dec = db.FloatProperty(required=True)
+    lt = db.FloatProperty(required=True)
