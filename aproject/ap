@@ -1,0 +1,22 @@
+#!/bin/sh
+case $1 in
+ start)
+ forever start -l forever.log -a -o logs/out.log -e logs/err.log -w --watchDirectory core app.js
+;;
+ stop)
+ forever stop app.js
+;;
+ restart)
+ forever restart app.js
+;;
+ status)
+ forever list
+;;
+*)
+ echo " Usage: $0 {action}"
+ echo " action : 	start
+		stop
+		restart"
+ exit 2
+ ;;
+esac

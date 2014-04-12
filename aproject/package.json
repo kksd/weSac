@@ -1,0 +1,12 @@
+{
+  "name": "aproject",
+  "version": "0.0.1",
+  "dependencies": {
+    "express": "latest",
+    "mocha": "latest",
+    "nodemon": "latest",
+    "expect": "latest",
+    "forever": "latest",
+    "socket.io": "^0.9.16"
+  }
+}
