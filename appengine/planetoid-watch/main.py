@@ -15,11 +15,22 @@
 # limitations under the License.
 #
 import webapp2
+import rest
+import models
 
 class MainHandler(webapp2.RequestHandler):
     def get(self):
         self.response.write('Hello world!')
 
 app = webapp2.WSGIApplication([
-    ('/', MainHandler)
+    ('/', MainHandler),
+    ('/rest/.*', rest.Dispatcher),
 ], debug=True)
+
+
+
+# configure the rest dispatcher to know what prefix to expect on request urls
+rest.Dispatcher.base_url = "/rest"
+
+# add all models from the models module
+rest.Dispatcher.add_models_from_module(models)
