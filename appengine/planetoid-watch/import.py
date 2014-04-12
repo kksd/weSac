@@ -29,6 +29,7 @@ if __name__ == "__main__":
     # import asteroid from dictionary
     asteroid_data = {
         "target_body_name" : "Test 123", 
+        "target_body_code" : "123",
         "center_body_name" : "Earth", 
         "target_radii" : "2.3 km", 
         "center_geoetic" : "Sample", 
