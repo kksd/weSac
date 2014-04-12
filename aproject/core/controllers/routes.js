@@ -8,7 +8,6 @@ exports.bind = function (app) {
         res.send('response: test567');
     });
 
-
     app.get("/testjson123", function(req, res){
         res.send({'response': 'json456'});
     });
