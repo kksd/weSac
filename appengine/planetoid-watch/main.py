@@ -17,11 +17,13 @@
 import webapp2
 import rest
 import models
+import views
 
 # we want all URL's to be on the REST API
 rest.Dispatcher.base_url = "/"
 
 app = webapp2.WSGIApplication([
+    ('/test_view', views.TestView),
     ('.*', rest.Dispatcher),
 ], debug=True)
 
