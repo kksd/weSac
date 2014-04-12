@@ -4,6 +4,13 @@ var Responder = require("./routes/responder.js");
 var responder = new Responder();
 var Importer = require("./tools/dataImporter.js");
 var importer = new Importer();
+importer.hello()
+
+importer.getRawDataList(function(){
+    console.log("hello");
+    importer.getSubjectInformation();
+});
+//importer.getSubjectInformation();
 
 var port = 4444;
 

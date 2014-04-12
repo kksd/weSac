@@ -17,6 +17,7 @@
 import webapp2
 import rest
 import models
+from tools.importer import Importor
 
 # we want all URL's to be on the REST API
 rest.Dispatcher.base_url = "/"
@@ -24,6 +25,8 @@ rest.Dispatcher.base_url = "/"
 app = webapp2.WSGIApplication([
     ('.*', rest.Dispatcher),
 ], debug=True)
+
+import = Importor()
 
 
 # add all models from the models module
