@@ -9,6 +9,7 @@ class Pet(db.Model):
 
 class Asteroid(db.Model):
     target_body_name = db.StringProperty(required=True)
+    target_body_code = db.StringProperty(required=True)
     center_body_name = db.StringProperty(required=True)
     target_radii = db.StringProperty(required=True)
     center_geoetic = db.StringProperty(required=True)
