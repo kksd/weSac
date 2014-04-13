@@ -29,16 +29,12 @@ class Importor(object):
         self.payload = DataPayLoad()
         if not DEBUG:
             dev_appserver.fix_sys_path()
-            config_remote_api(get_auth_creds_from_stdin, "planetoid-watch")
+            config_remote_api(get_auth_creds_from_stdin, "eminent-yen-549")
 
             # delete old data
             db.delete(Pet.all())
-            db.delete(AsteroidLocation.all())
-            db.delete(Asteroid.all())
-
-            # sample pet data, simple use case
-            Pet(name="Buddy", type="dog").put()
-            Pet(name="Taz", type="cat").put()
+            #db.delete(AsteroidLocation.all())
+            #db.delete(Asteroid.all())
 
     def _get_file_list(self):
         
@@ -53,12 +49,13 @@ class Importor(object):
             with open(path_to_the_file, 'r') as f:
                 lines = f.readlines()
                 self.filter(lines)
-            print self.payload.get_data()
+            print self.payload.get_attr()
             if not DEBUG:
                 asteroid = Asteroid(**self.payload.attr)
                 asteroid.put()
                 for location in self.payload.data:
                     AsteroidLocation(asteroid=asteroid,
+                                     code=location['code'],
                                      timestamp=location['timestamp'],
                                      ra=location['ra'],
                                      dec=location['dec'],
@@ -107,15 +104,16 @@ class Importor(object):
             else:
                 if line.startswith('$$EOE'):
                     break;
-                self._filter_RA_DEC_and_publish(line)
+                self._filter_RA_DEC_and_publish(line, self.payload.attr['target_body_code'])
 
-    def _filter_RA_DEC_and_publish(self, line):
+    def _filter_RA_DEC_and_publish(self, line, target_body_code):
         tokens = line.split(',')
         date_time = self._get_datetime(tokens[0])
         ra = float(tokens[4])
         dec = float(tokens[5])
         lt = float(tokens[6])
-        data = {'timestamp': date_time,
+        data = {'code': target_body_code,
+                'timestamp': date_time,
                 'ra': ra,
                 'dec': dec,
                 'lt': lt}

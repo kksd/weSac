@@ -96,7 +96,8 @@ class FullListQuery(webapp2.RequestHandler):
         result = list()
         for asteroid in q.run():
             lt = None
-            locations.filter('asteroid =', asteroid)
+            t = datetime.utcnow()
+            locations.filter('code =', asteroid.target_body_code)
             for i in locations.run():
                 lt = i.lt
                 break
