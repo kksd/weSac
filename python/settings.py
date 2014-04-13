@@ -5,6 +5,8 @@ from location import location
 RESOURCE_METHODS = ['GET', 'POST', 'DELETE']
 ITEM_METHODS = ['GET', 'PATCH', 'PUT', 'DELETE']
 
+XML = False
+PAGINATION = False
 
 #if os.environ.get('USER') == 'ubuntu':
 #    SERVER_NAME = 'thepans.info'
