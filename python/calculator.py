@@ -53,8 +53,6 @@ class Calculator():
 		if ha < 0:
 			ha = ha + 360.0
 
-		print ha
-
 		ha = ha * math.pi/180.0
 		dec = dec * math.pi/180.0
 		lat = lat * math.pi/180.0

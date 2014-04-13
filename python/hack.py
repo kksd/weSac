@@ -29,7 +29,7 @@ class Hacker(object):
 			#minute = 10 * math.floor(utc.minute / 10)
 			#now = datetime(year, month, day, hour, minute)
 			utc = request.args.get('utc', '')
-			utc = datetime.strptime(utc, '%Y-%b-%d %H:%M')
+			utc = datetime.strptime(utc, '%Y-%m-%d %H:%M')
 
 			lat = float(request.args.get('lat', ''))
 			lon = float(request.args.get('lon', ''))
