@@ -1,4 +1,5 @@
 import os
+import datetime
 import re
 
 CURRENT_PATH = os.path.dirname(os.path.realpath(__file__))
@@ -49,15 +50,19 @@ class Importor(object):
 			else:
 				if line.startswith('$$EOE'):
 					break;
-				self._filter_RA_DEC(line)
+				self._filter_RA_DEC_and_publish(line)
 
-	def _filter_RA_DEC(self, line):
+	def _filter_RA_DEC_and_publish(self, line):
 		tokens = line.split(',')
-		date_string = tokens[1]
+		date_time = self._get_datetime(tokens[0])
 		ra = float(tokens[4])
 		dec = float(tokens[5])
 		lt = float(tokens[6])
-		print lt
+		print date_time, ra, dec, lt
+
+	def _get_datetime(self, date_string):
+		d = datetime.datetime.strptime(date_string.strip() , '%Y-%b-%d %H:%M:%S')
+		return d
 
 
 	def get_RA_DEC(self, file_stream):
