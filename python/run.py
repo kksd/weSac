@@ -1,6 +1,9 @@
+from importer import Importer
+
 from eve import Eve
 app = Eve()
 
 if __name__ == '__main__':
-    app.run()
-
+	importer = Importer()
+	importer.do()
+	app.run()

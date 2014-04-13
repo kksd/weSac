@@ -1,6 +1,9 @@
 asteroid = {
 	'item_title' : 'asteroid',
 	'schema' : {
+		'aid' : {
+			'type' : 'string'
+		},
 		'name' : {
 			'type' : 'string'
 		}, 
