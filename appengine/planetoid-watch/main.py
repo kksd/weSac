@@ -24,6 +24,8 @@ rest.Dispatcher.base_url = "/"
 
 app = webapp2.WSGIApplication([
     ('/test_view', views.TestView),
+    ('/list_query', views.ListQuery),
+    ('/attr_query', views.InfoView),
     ('.*', rest.Dispatcher),
 ], debug=True)
 

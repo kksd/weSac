@@ -15,30 +15,30 @@ def config_remote_api(auth_func, appid):
     remote_api_stub.ConfigureRemoteApi(None, '/_ah/remote_api', 
         auth_func, str(appid) + '.appspot.com')
 
-
+DEBUG = False
 CURRENT_PATH = os.path.dirname(os.path.realpath(__file__))
 RELATIVE_PATH_TO_RAW_DATA_FOLDER = 'raw/'
 PATH_TO_RAW_DATA_FOLDER = os.path.join(CURRENT_PATH,
                                        RELATIVE_PATH_TO_RAW_DATA_FOLDER)
+UNAVAILABLE = "(unavailable)"
 
 class Importor(object):
 
     def __init__(self):
         print "hello world"
         self.payload = DataPayLoad()
-        """
-        dev_appserver.fix_sys_path()
-        config_remote_api(get_auth_creds_from_stdin, "planetoid-watch")
+        if not DEBUG:
+            dev_appserver.fix_sys_path()
+            config_remote_api(get_auth_creds_from_stdin, "planetoid-watch")
 
-        # delete old data
-        db.delete(Pet.all())
-        db.delete(AsteroidLocation.all())
-        db.delete(Asteroid.all())
+            # delete old data
+            db.delete(Pet.all())
+            db.delete(AsteroidLocation.all())
+            db.delete(Asteroid.all())
 
-        # sample pet data, simple use case
-        Pet(name="Buddy", type="dog").put()
-        Pet(name="Taz", type="cat").put()
-        """
+            # sample pet data, simple use case
+            Pet(name="Buddy", type="dog").put()
+            Pet(name="Taz", type="cat").put()
 
     def _get_file_list(self):
         
@@ -47,11 +47,24 @@ class Importor(object):
 
     def _get_subject_information(self, file_list):
         for raw_file in file_list:
+            print raw_file
             path_to_the_file = os.path.join(PATH_TO_RAW_DATA_FOLDER,
                                             raw_file)
             with open(path_to_the_file, 'r') as f:
                 lines = f.readlines()
                 self.filter(lines)
+            print self.payload.get_attr()
+            if not DEBUG:
+                asteroid = Asteroid(**self.payload.attr)
+                asteroid.put()
+                for location in self.payload.data:
+                    AsteroidLocation(asteroid=asteroid,
+                                     timestamp=location['timestamp'],
+                                     ra=location['ra'],
+                                     dec=location['dec'],
+                                     lt=location['lt']).put()
+            self.payload.clean_payload()
+
 
     def filter(self, lines):
         filtering_attr = True
@@ -65,13 +78,29 @@ class Importor(object):
                     tokens = line.split(' ')
                     self.payload.set_center_body_name(tokens[3])
                 elif line.startswith('Target radii'):
-                    self.payload.set_target_radii(line[line.index(': ') + 2 : line.index('km') + 2])
+                    try:
+                        value = line[line.index(': ') + 2 : line.index('km') + 2]
+                    except:
+                        value = UNAVAILABLE
+                    self.payload.set_target_radii(value)
                 elif line.startswith('Center geodetic'):
-                    self.payload.set_center_geoetic(line[line.index(': ') + 2 : line.index(' {')])
+                    try:
+                        value = line[line.index(': ') + 2 : line.index(' {')]
+                    except:
+                        value = UNAVAILABLE
+                    self.payload.set_center_geoetic(value)
                 elif line.startswith('Center radii'):
-                    self.payload.set_center_radii(line[line.index(': ') + 2 : line.index('km') + 2])
+                    try:
+                        value = line[line.index(': ') + 2 : line.index('km') + 2]
+                    except:
+                        value = UNAVAILABLE
+                    self.payload.set_center_radii(value)
                 elif line.startswith('Target primary'):
-                    self.payload.set_target_primary(line[line.index(': ') + 2 : ].strip())
+                    try:
+                        value = line[line.index(': ') + 2 : ].strip()
+                    except:
+                        value = UNAVAILABLE
+                    self.payload.set_target_primary(value)
                 elif line.startswith('$$SOE'):
                     filtering_attr = False
             else:
@@ -85,19 +114,15 @@ class Importor(object):
         ra = float(tokens[4])
         dec = float(tokens[5])
         lt = float(tokens[6])
-        data = {'time': date_time,
-                        'ra': ra,
-                        'dec': dec,
-                        'lt': lt}
+        data = {'timestamp': date_time,
+                'ra': ra,
+                'dec': dec,
+                'lt': lt}
         self.payload.add_data(data)
 
     def _get_datetime(self, date_string):
-        d = datetime.strptime(date_string.strip() , '%Y-%b-%d %H:%M:%S')
+        d = datetime.strptime(date_string.strip() , '%Y-%b-%d %H:%M')
         return d
-
-    def get_RA_DEC(self, file_stream):
-        file_stream = "$$SOE here is my text $$EOE"
-        print re.findall(r'$$SOE(.*?)$$EOE',file_stream)
 
 
 class DataPayLoad(object):
@@ -114,7 +139,7 @@ class DataPayLoad(object):
         self.attr['target_body_code'] = code
 
     def set_center_body_name(self, name):
-        self.attr['target_center_body_name'] = name
+        self.attr['center_body_name'] = name
 
     def set_target_radii(self, rad):
         self.attr['target_radii'] = rad
@@ -140,10 +165,15 @@ class DataPayLoad(object):
     def get_data(self):
         return self.data
 
+    def clean_payload(self):
+        # I need to do this because I was lazy
+        self.attr = dict()
+        self.data = list()
+
 
 if __name__ == "__main__":
     importer = Importor()
     file_list = importer._get_file_list()
     importer._get_subject_information(file_list)
-    print len(importer.payload.get_attr())
+    # print len(importer.payload.get_attr())
     # print importer.payload.get_data()
