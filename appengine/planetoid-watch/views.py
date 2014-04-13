@@ -79,7 +79,8 @@ class ListQuery(webapp2.RequestHandler):
         q = db.Query(Asteroid)
         result = list()
         for asteroid in q.run():
-            result.append(asteroid.target_body_code)
+            result.append({"target_body_code": asteroid.target_body_code,
+                           "target_body_name": asteroid.target_body_name})
 
         self.response.headers['Content-Type'] = 'application/json'
         self.response.out.write(json.dumps(result))
