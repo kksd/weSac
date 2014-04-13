@@ -27,11 +27,13 @@ class Calculator():
 
 
 		jd = b + c + d - 730550.5 + day + (hour + minute/60.0 + second/3600.0)/24.0
-
 		jt = jd/36525.0
 
-		mst = 280.46061837 + 360.98564736629 * jd + 0.000387933 * jt * jt - jt * jt * jt / 38710000.0 + lon
 
+		mst = 280.46061837 + 360.98564736629 * jd 
+		mst = mst + 0.000387933 * jt * jt 
+		mst = mst - jt * jt * jt / 38710000.0 
+		mst = mst + lon
 
 		if mst > 0.0:
 			while mst > 360.0:
@@ -45,12 +47,13 @@ class Calculator():
 	
 
 	def convert(self, ra, dec, lat, lon, lt, dt):
-		ha = self.meanSiderealTime(dt, lon) - ra
 
-		print ha
+		ha = self.meanSiderealTime(dt, lon) - ra
 
 		if ha < 0:
 			ha = ha + 360.0
+
+		print ha
 
 		ha = ha * math.pi/180.0
 		dec = dec * math.pi/180.0
@@ -69,10 +72,10 @@ class Calculator():
 		if math.sin(ha) > 0.0:
 			hrz_azimuth = 360.0 - hrz_azimuth
 
-		result = {}
-		result['altitude'] = hrz_altitude
-		result['azimuth'] = hrz_azimuth
-
+		result = {
+			'altitude' : hrz_altitude,
+			'azimuth' : hrz_azimuth
+		}
 		return result
 
 
