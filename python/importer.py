@@ -69,7 +69,7 @@ class Importer(object):
                         l['ra'] = float(tokens[4])
                         l['dec'] = float(tokens[5])
                         l['lt'] = float(tokens[6])
-                        l['aid'] = a['id']
+                        l['aid'] = a['aid']
                         db.location.insert(l)
                 
 
