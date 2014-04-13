@@ -8,16 +8,14 @@ class Pet(db.Model):
     spayed_or_neutered = db.BooleanProperty()
 
 class Asteroid(db.Model):
+    target_id = db.StringProperty(required=True)
     target_body_name = db.StringProperty(required=True)
-    target_body_code = db.StringProperty(required=True)
-    center_body_name = db.StringProperty(required=True)
     target_radii = db.StringProperty(required=True)
     center_geoetic = db.StringProperty(required=True)
     center_radii = db.StringProperty(required=True)
     target_primary = db.StringProperty(required=True)
 
 class AsteroidLocation(db.Model):
-    asteroid = db.ReferenceProperty(Asteroid, required=True)
     timestamp = db.DateTimeProperty(required=True)
     ra = db.FloatProperty(required=True)
     dec = db.FloatProperty(required=True)
