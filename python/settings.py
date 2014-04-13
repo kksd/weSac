@@ -5,6 +5,8 @@ from location import location
 RESOURCE_METHODS = ['GET', 'POST', 'DELETE']
 ITEM_METHODS = ['GET', 'PATCH', 'PUT', 'DELETE']
 
+print os.environ
+
 if os.environ.get('PORT'):
     SERVER_NAME = 'www.thepans.info'
 else:
